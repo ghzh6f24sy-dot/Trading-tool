@@ -16,11 +16,13 @@ tab_selection = st.sidebar.radio("Navigation", ["📊 Chart & Analyse", "📐 Ri
 # Globale Eingabe für Ticker
 ticker_symbol = st.sidebar.text_input("Asset Suchen (z.B. AAPL, SPY, QQQ, GC=F)", value="AAPL").upper()
 
-# Daten laden
+# Daten laden & MultiIndex bereinigen
 @st.cache_data(ttl=300)
 def load_data(symbol):
     try:
-        data = yf.download(symbol, period="1mo", interval="1d")
+        data = yf.download(symbol, period="1mo", interval="1d", auto_adjust=True)
+        if isinstance(data.columns, pd.MultiIndex):
+            data.columns = data.columns.get_level_values(0)
         return data
     except Exception as e:
         return None
@@ -32,15 +34,15 @@ if tab_selection == "📊 Chart & Analyse":
     st.header(f"Marktanalyse für: {ticker_symbol}")
     
     if df is not None and not df.empty:
-        # Aktueller Preis
-        current_price = df['Close'].iloc[-1].item()
-        prev_price = df['Close'].iloc[-2].item()
+        # Aktueller Preis sicher auslesen
+        current_price = float(df['Close'].iloc[-1])
+        prev_price = float(df['Close'].iloc[-2])
         change = ((current_price - prev_price) / prev_price) * 100
         
         col1, col2, col3 = st.columns(3)
         col1.metric("Aktueller Preis", f"${current_price:.2f}", f"{change:.2f}%")
-        col2.metric("5T-Hoch", f"${df['High'].tail(5).max().item():.2f}")
-        col3.metric("5T-Tief", f"${df['Low'].tail(5).min().item():.2f}")
+        col2.metric("5T-Hoch", f"${float(df['High'].tail(5).max()):.2f}")
+        col3.metric("5T-Tief", f"${float(df['Low'].tail(5).min()):.2f}")
         
         # Plotly Kerzenchart
         fig = go.Figure(data=[go.Candlestick(
@@ -78,7 +80,6 @@ elif tab_selection == "📐 Risiko-Rechner (SL/TP)":
         max_loss_money = capital * (risk_percent / 100.0)
         
         if position_type == "Long (Kauf)":
-            risk_per_share = (entry_price * (risk_percent / 100.0)) / leverage
             sl_price = entry_price - (max_loss_money / (total_position_value / entry_price))
             tp_price = entry_price + ((entry_price - sl_price) * crv)
         else:
@@ -119,3 +120,4 @@ elif tab_selection == "🌍 Makro & News Kalender":
     
     st.table(pd.DataFrame(news_data))
     st.warning("⚠️ **Tipp:** Das Tool wird in einer späteren Version automatisiert Live-Daten von Finanz-APIs einlesen, um dich rechtzeitig vor solchen News zu warnen ('No-Trade-Zone').")
+
