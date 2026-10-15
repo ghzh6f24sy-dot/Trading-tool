@@ -32,25 +32,25 @@ st.markdown("""
 # --- AUTO-REFRESH (Alle 10 Sekunden im Hintergrund aktualisieren) ---
 count = st_autorefresh(interval=10000, limit=None, key="datarefresh")
 
-st.title("Trading & Markt-Analyse Pro")
-st.markdown("Professionelles Assistenz-Tool für Smart Trading und Risiko-Management.")
+st.title("🚀 Trading & Markt-Analyse Pro")
+st.markdown("Dein professionelles, aufgeräumtes Assistenz-Tool für Smart Trading.")
 
 # --- SEITENLEISTE: Navigation & Einstellungen ---
-st.sidebar.header("Steuerung & Setup")
+st.sidebar.header("⚙️ Steuerung & Setup")
 
 # Auto-Refresh Master-Switch
-auto_refresh_on = st.sidebar.checkbox("Auto-Refresh (Live-Modus)", value=True)
+auto_refresh_on = st.sidebar.checkbox("🔄 Auto-Refresh (Live-Feeling)", value=True)
 
 tab_selection = st.sidebar.radio("Navigation", [
-    "Chart & Trend-Check", 
-    "Risiko-Rechner & Realitäts-Check", 
-    "Watchlist & Kategorien", 
-    "Market Screener",
-    "Makro & News"
+    "📊 Chart & Trend-Check", 
+    "📐 Risiko-Rechner & Realitäts-Check", 
+    "⭐ Watchlist & Kategorien", 
+    "🔍 Market Screener",
+    "🌍 Makro & News"
 ])
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("Asset Auswahl")
+st.sidebar.subheader("🎯 Asset Auswahl")
 
 # Kategorisierte Watchlist für den Schnellstart / Suche
 asset_category = st.sidebar.selectbox("Kategorie wählen", ["Aktien & Tech", "ETFs", "Krypto", "Futures & Rohstoffe", "Eigenes Ticker eingeben"])
@@ -71,7 +71,7 @@ timeframe = st.sidebar.selectbox("Zeitrahmen (Timeframe)", ["1m", "5m", "1h", "4
 
 # Benachrichtigungs-Master-Switch in der Sidebar
 st.sidebar.markdown("---")
-st.sidebar.subheader("Benachrichtigungen")
+st.sidebar.subheader("🔔 Benachrichtigungen")
 notifications_active = st.sidebar.checkbox("Master-Switch (Push-Alerts)", value=False)
 if notifications_active:
     st.sidebar.success("Aktiv: Warnt bei Zonen-Hits & Volumen-Spikes.")
@@ -113,21 +113,21 @@ if df is not None and not df.empty:
     ema50 = float(df['EMA_50'].iloc[-1])
     ema200 = float(df['EMA_200'].iloc[-1])
     
-    # Automatische Buy / Sell Support-Resistance Zonen
+    # Automatische Buy / Sell Support-Resistance Zonen (Berechnung über Swing High/Low der letzten Perioden)
     support_zone = float(df['Low'].tail(14).min())
     resistance_zone = float(df['High'].tail(14).max())
     
     # Clean Trend Logic (Market Bias)
     if current_price > ema50 and ema50 > ema200:
-        market_bias = "Stark Bullish [Long-Fokus]"
+        market_bias = "🟢 Stark Bullish (Long-Fokus)"
     elif current_price < ema50 and ema50 < ema200:
-        market_bias = "Stark Bearish [Short-Fokus]"
+        market_bias = "🔴 Stark Bearish (Short-Fokus)"
     else:
-        market_bias = "Neutral / Konsolidierung"
+        market_bias = "🟡 Neutral / Konsolidierung"
 
 
 # --- TAB 1: CHART & TREND-CHECK ---
-if tab_selection == "Chart & Trend-Check":
+if tab_selection == "📊 Chart & Trend-Check":
     st.header(f"Marktanalyse: {ticker_symbol} ({timeframe})")
     
     if df is not None and not df.empty:
@@ -140,9 +140,9 @@ if tab_selection == "Chart & Trend-Check":
         
         st.markdown("---")
         
-        # Zonen-Toggle für den Chart
-        st.subheader("Chart-Steuerung & Zonen")
-        show_zones = st.checkbox("Support- & Resistance-Zonen im Chart einblenden")
+        # Zonen-Toggle für den Chart (Hält den Bildschirm sauber!)
+        st.subheader("🛠️ Chart-Steuerung & Zonen")
+        show_zones = st.checkbox("☑️ Support- & Resistance-Zonen im Chart einblenden")
         
         # Plotly Kerzenchart
         fig = go.Figure(data=[go.Candlestick(
@@ -154,9 +154,10 @@ if tab_selection == "Chart & Trend-Check":
             name="Candles"
         )])
         
+        # Wenn der Toggle aktiv ist, zeichnen wir dezente Linien ein
         if show_zones:
-            fig.add_hline(y=support_zone, line_dash="dash", line_color="#28a745", annotation_text="Support-Zone")
-            fig.add_hline(y=resistance_zone, line_dash="dash", line_color="#dc3545", annotation_text="Resistance-Zone")
+            fig.add_hline(y=support_zone, line_dash="dash", line_color="green", annotation_text="Support-Zone")
+            fig.add_hline(y=resistance_zone, line_dash="dash", line_color="red", annotation_text="Resistance-Zone")
             
         fig.update_layout(
             title=f"Preisverlauf ({ticker_symbol})", 
@@ -167,8 +168,8 @@ if tab_selection == "Chart & Trend-Check":
         )
         st.plotly_chart(fig, use_container_width=True)
         
-        # Volumen Chart
-        st.subheader("Volumen-Verteilung")
+        # Volumen Chart direkt darunter
+        st.subheader("🌊 Volumen-Verteilung")
         fig_vol = go.Figure(data=[go.Bar(x=df.index, y=df['Volume'], marker_color='#4a5568', name="Volumen")])
         fig_vol.update_layout(template="plotly_dark", height=200, margin=dict(t=10, b=10))
         st.plotly_chart(fig_vol, use_container_width=True)
@@ -178,13 +179,14 @@ if tab_selection == "Chart & Trend-Check":
 
 
 # --- TAB 2: RISIKO-RECHNER & REALITÄTS-CHECK ---
-elif tab_selection == "Risiko-Rechner & Realitäts-Check":
-    st.header("Automatisierter Risiko-Rechner & Realitäts-Check")
-    st.markdown("Kapitalsicherung durch mathematische Disziplin und integrierten Realitäts-Filter.")
+elif tab_selection == "📐 Risiko-Rechner & Realitäts-Check":
+    st.header("📐 Automatisierter Risiko-Rechner & Realitäts-Check")
+    st.markdown("Schütze dein Kapital durch mathematische Disziplin und den integrierten Realitäts-Filter.")
     
     # Preset Auswahl
-    preset = st.selectbox("Risiko-Presets wählen", ["Manuelle Eingabe", "Konservativ [1% Risiko / 1:2 CRV]", "Aggressiv [3% Risiko / 1:3 CRV]", "Swing-Trading [2% Risiko / 1:2.5 CRV]"])
+    preset = st.selectbox("⚡ Risiko-Presets wählen", ["Manuelle Eingabe", "Konservativ (1% Risiko / 1:2 CRV)", "Aggressiv (3% Risiko / 1:3 CRV)", "Swing-Trading (2% Risiko / 1:2.5 CRV)"])
     
+    # Voreinstellungen logisch steuern
     p_risk = 2.0
     p_crv = 2.0
     if "Konservativ" in preset:
@@ -228,74 +230,75 @@ elif tab_selection == "Risiko-Rechner & Realitäts-Check":
         res_col3.metric("Max. Risiko ($)", f"${max_loss_money:.2f}")
         
         # --- TRADE REALITÄTS-CHECK ---
-        st.markdown("### Trade-Realitäts-Check [Probability Score]")
+        st.markdown("### 🛡️ Trade-Realitäts-Check (Probability Score)")
         
+        # Einfache Heuristik für den Realitäts-Check
         if crv > 4.0:
-            st.error("Utopisches Setup [Unwahrscheinlich]: Ein CRV über 4.0 erfordert enorme Kursbewegungen, die statistisch gegen dich laufen. Hohes Risiko für Fehlausbrüche.")
+            st.error("🔴 **Utopisches Setup (Unwahrscheinlich):** Ein CRV über 4.0 erfordert enorme Kursbewegungen, die statistisch gegen dich laufen. Hohes Risiko für Fehlausbruch.")
         elif crv > 2.5:
-            st.warning("Mit Vorsicht zu genießen: Das CRV ist ambitioniert. Prüfe, ob starke Widerstände im Weg liegen.")
+            st.warning("🟡 **Mit Vorsicht zu genießen:** Das CRV ist ambitioniert. Prüfe, ob starke Widerstände/Widerstands-Zonen im Weg liegen.")
         else:
-            st.success("Realistisches Setup: Gesundes Chance-Risiko-Verhältnis im Rahmen der normalen Markt-Volatilität.")
+            st.success("🟢 **Realistisches Setup:** Gesundes Chance-Risiko-Verhältnis im Rahmen der normalen Markt-Volatilität.")
 
 
 # --- TAB 3: WATCHLIST & KATEGORIEN ---
-elif tab_selection == "Watchlist & Kategorien":
-    st.header("Strukturierte Watchlist")
-    st.markdown("Übersicht der wichtigsten Assets, aufgeteilt nach Anlageklassen.")
+elif tab_selection == "⭐ Watchlist & Kategorien":
+    st.header("⭐ Deine strukturierte Watchlist")
+    st.markdown("Übersicht deiner wichtigsten Assets, aufgeteilt nach Anlageklassen.")
     
-    w_tab1, w_tab2, w_tab3, w_tab4 = st.tabs(["Aktien", "ETFs", "Krypto", "Futures"])
+    w_tab1, w_tab2, w_tab3, w_tab4 = st.tabs(["💻 Aktien", "📈 ETFs", "🪙 Krypto", "🛢️ Futures"])
     
     with w_tab1:
         st.table(pd.DataFrame({
-            "Asset": ["Apple [AAPL]", "Microsoft [MSFT]", "NVIDIA [NVDA]"],
+            "Asset": ["Apple (AAPL)", "Microsoft (MSFT)", "NVIDIA (NVDA)"],
             "Fokus": ["Tech / Growth", "Cloud / KI", "Semiconductor"],
             "Status": ["Beobachten", "Akkumulieren", "Breakout-Zone"]
         }))
     with w_tab2:
         st.table(pd.DataFrame({
-            "Asset": ["S&P 500 [SPY]", "Nasdaq 100 [QQQ]", "Russell 2000 [IWM]"],
+            "Asset": ["S&P 500 (SPY)", "Nasdaq 100 (QQQ)", "Russell 2000 (IWM)"],
             "Fokus": ["Breiter Markt", "Tech-Index", "Small Caps"],
             "Status": ["Trend folgend", "Trend folgend", "Neutral"]
         }))
     with w_tab3:
         st.table(pd.DataFrame({
-            "Asset": ["Bitcoin [BTC-USD]", "Ethereum [ETH-USD]"],
+            "Asset": ["Bitcoin (BTC-USD)", "Ethereum (ETH-USD)"],
             "Fokus": ["Store of Value", "Smart Contracts"],
             "Status": ["Support-Test", "Konsolidierung"]
         }))
     with w_tab4:
         st.table(pd.DataFrame({
-            "Asset": ["Gold [GC=F]", "Rohöl [CL=F]", "S&P Future [ES=F]"],
+            "Asset": ["Gold (GC=F)", "Rohöl (CL=F)", "S&P Future (ES=F)"],
             "Fokus": ["Edelmetall", "Energie", "Index-Future"],
             "Status": ["Long-Bias", "Short-Bias", "Aktiv"]
         }))
 
 
 # --- TAB 4: MARKET SCREENER ---
-elif tab_selection == "Market Screener":
-    st.header("Market Screener [Entdeckungs-Modus]")
-    st.markdown("Marktscan basierend auf Volumen-Anomalien und Momentum.")
+elif tab_selection == "🔍 Market Screener":
+    st.header("🔍 Market Screener (Entdeckungs-Modus)")
+    st.markdown("Finde neue Chancen basierend auf Volumen-Spikes und Momentum.")
     
     if st.button("Screener starten"):
-        with st.spinner("Scanne globale Märkte nach Signalen..."):
+        with st.spinner("Scanne globale Märkte nach Anomalien..."):
             screener_data = [
-                {"Asset": "NVDA", "Kategorie": "Aktien", "Signal": "Volumen-Spike + Breakout", "RSI": "68 [Stark]"},
-                {"Asset": "GC=F", "Kategorie": "Futures", "Signal": "Test von Widerstandsmarken", "RSI": "72 [Überkauft]"},
-                {"Asset": "BTC-USD", "Kategorie": "Krypto", "Signal": "Rebound an Support", "RSI": "45 [Neutral]"},
-                {"Asset": "AMD", "Kategorie": "Aktien", "Signal": "Relatives Stärke-Plus", "RSI": "58 [Gesund]"}
+                {"Asset": "NVDA", "Kategorie": "Aktien", "Signal": "🚀 Volumen-Spike + Breakout", "RSI": "68 (Stark)"},
+                {"Asset": "GC=F", "Kategorie": "Futures", "Signal": "🟢 Anlauf auf Allzeithoch", "RSI": "72 (Überkauft)"},
+                {"Asset": "BTC-USD", "Kategorie": "Krypto", "Signal": "🟡 Rebound an Support", "RSI": "45 (Neutral)"},
+                {"Asset": "AMD", "Kategorie": "Aktien", "Signal": "🔥 Relatives Stärke-Plus", "RSI": "58 (Gesund)"}
             ]
             st.table(pd.DataFrame(screener_data))
-            st.success("Screener erfolgreich abgeschlossen.")
+            st.success("Screener erfolgreich abgeschlossen!")
 
 
 # --- TAB 5: MAKRO & NEWS ---
-elif tab_selection == "Makro & News":
-    st.header("Wirtschaftskalender & Makro-Risiken")
-    st.markdown("Wichtige Events mit potenziellem Einfluss auf den Gesamtmarkt.")
+elif tab_selection == "🌍 Makro & News":
+    st.header("🌍 Wirtschaftskalender & Makro-Risiken")
+    st.markdown("Wichtige Events, die massive Einflüsse auf den Gesamtmarkt haben.")
     
     news_data = [
-        {"Datum": "Heute", "Event": "US Verbraucherpreisindex [CPI / Inflation]", "Einfluss": "Hoch [Massiv]", "Status": "Achtung vor Intraday-Spikes"},
-        {"Datum": "Morgen", "Event": "FED Zinsentscheid & Pressekonferenz", "Einfluss": "Sehr Hoch", "Status": "Keine neuen Positionen eröffnen"},
-        {"Datum": "In 3 Tagen", "Event": "US Arbeitsmarktdaten [NFP]", "Einfluss": "Mittel", "Status": "Erhöhte Volatilität erwartet"}
+        {"Datum": "Heute", "Event": "US Verbraucherpreisindex (CPI / Inflation)", "Einfluss": "🔴 Hoch (Massiv)", "Status": "Achtung vor Intraday-Spikes"},
+        {"Datum": "Morgen", "Event": "FED Zinsentscheid & Pressekonferenz", "Einfluss": "🔴 Sehr Hoch", "Status": "Keine neuen Positionen eröffnen"},
+        {"Datum": "In 3 Tagen", "Event": "US Arbeitsmarktdaten (NFP)", "Einfluss": "🟡 Mittel", "Status": "Erhöhte Volatilität erwartet"}
     ]
     st.table(pd.DataFrame(news_data))
