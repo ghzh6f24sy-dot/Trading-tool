@@ -132,7 +132,6 @@ if tab_selection == "Chart & Auto-Trade Trigger":
     st.header(f"Chart-Analyse & Trade-Erkennung: {ticker_symbol} ({timeframe})")
     
     if df is not None and not df.empty:
-        # Oberste Zeile: Live-Metriken & Signal-Box
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("Aktueller Preis", f"${current_price:.2f}", f"{change:.2f}%")
         m2.metric("Support-Zone", f"${support_zone:.2f}")
@@ -141,13 +140,11 @@ if tab_selection == "Chart & Auto-Trade Trigger":
         
         st.markdown("---")
         
-        # Automatischer Trade-Trigger & Zonen-Status
         st.subheader("Automatisierter Trade-Realitäts- & Zonen-Check")
         st.info(f"**Handels-Signal Status:** {trade_signal}")
         
         st.markdown("---")
         
-        # Chart-Steuerung
         col_c1, col_c2 = st.columns([2, 1])
         with col_c1:
             show_zones = st.checkbox("Buy/Sell Zonen & POC im Chart einblenden", value=True)
@@ -169,7 +166,6 @@ if tab_selection == "Chart & Auto-Trade Trigger":
             
         fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "sun"])])
         
-        # TradingView Konfiguration: Erlaubt echtes Scroll-Zoom, Pinch-Zoom und freies Verschieben
         fig.update_layout(
             title=f"Preisverlauf ({ticker_symbol}) - TradingView Style Interaktiv",
             xaxis_title="Zeit",
@@ -182,7 +178,6 @@ if tab_selection == "Chart & Auto-Trade Trigger":
         
         st.plotly_chart(fig, use_container_width=True, config={"scrollZoom": True, "editable": True, "displayModeBar": True})
         
-        # Volumen Chart
         st.subheader("Volumen-Verteilung")
         fig_vol = go.Figure(data=[go.Bar(x=df.index, y=df['Volume'], marker_color='#4a5568', name="Volumen")])
         fig_vol.update_xaxes(rangebreaks=[dict(bounds=["sat", "sun"])])
@@ -327,8 +322,8 @@ elif tab_selection == "Globaler Event-Kalender & Impact [MEZ]":
         st.markdown("### Vergangene Events & Tatsächliche Marktauswirkungen")
         past_events = [
             {"Datum": "Vor 3 Tagen", "Event": "US Erstanträge Arbeitslosenhilfe", "Prognose": "225k", "Ergebnis": "218k (Besser als erwartet)", "Markt-Impact": "🟢 Aktienmärkte reagierten mit starkem Intraday-Rallye."},
-            {"Datum Letzte Woche", "Event": "OPEC+ Oel-Fördermengen Treffen", "Prognose": "Kürzung beibehalten", "Ergebnis": "Überraschende Erhöhung", "Markt-Impact": "🔴 Rohöl (CL=F) brach um 4.5% ein."},
-            {"Datum Vor 2 Wochen", "Event": "Japan Zinsentscheidung (BOJ)", "Prognose": "Zinserhöhung", "Ergebnis": "Zinserhöhung um 25 bps", "Markt-Impact": "🟡 Starker Yen-Anstieg, temporäre Volatilität bei Nikkei."}
+            {"Datum": "Letzte Woche", "Event": "OPEC+ Oel-Fördermengen Treffen", "Prognose": "Kürzung beibehalten", "Ergebnis": "Überraschende Erhöhung", "Markt-Impact": "🔴 Rohöl (CL=F) brach um 4.5% ein."},
+            {"Datum": "Vor 2 Wochen", "Event": "Japan Zinsentscheidung (BOJ)", "Prognose": "Zinserhöhung", "Ergebnis": "Zinserhöhung um 25 bps", "Markt-Impact": "🟡 Starker Yen-Anstieg, temporäre Volatilität bei Nikkei."}
         ]
         st.table(pd.DataFrame(past_events))
 
